@@ -31,3 +31,20 @@ def generate_xml_response(data_list, root_element="root"):
     xml_string = ET.tostring(root, encoding='utf-8', method='xml')
     readable_xml = xml.dom.minidom.parseString(xml_string).toprettyxml(indent="  ")
     return readable_xml
+
+# MAIN PAGE
+@app.route("/")
+def home_page():
+    return Response("""
+    ==============================
+    Classic Models Customers CRUD
+
+    SELECT OPERATION
+    [1] Add Customers
+    [2] Retrieve Customers
+    [3] Update Customers
+    [4] Delete Customers
+    [E] Exit
+    ==============================
+    """, mimetype="text/plain")
+    
