@@ -62,11 +62,13 @@ rem Validate input (customerName and contactLastName cannot be empty)
 if "%customerName%"=="" (
 	echo Customer Name cannot be empty
 	pause
+	cls
 	goto add
 )
 if "%contactLastName%"=="" (
 	echo Contact Last Name cannot be empty
 	pause
+	cls
 	goto add
 )
 
@@ -144,6 +146,7 @@ set /p "search_customer_id=Enter Customer ID: "
 if "%search_customer_id%"=="" (
 	echo Customer ID cannot be empty
 	pause
+	cls
 	goto search
 )
 echo ==============
@@ -175,7 +178,8 @@ set /p "search_by_orders=Enter Customer ID: "
 if "%search_by_orders%"=="" (
 	echo Customer ID cannot be empty
 	pause
-	goto search
+	cls
+	goto orders
 )
 echo ==============
 echo SELECT FORMAT
@@ -208,7 +212,8 @@ rem Validate input (city cannot be empty)
 if "%city%"=="" (
 	echo City cannot be empty
 	pause
-	goto retrieve
+	cls
+	goto city
 )
 
 set "encodedCity=!city: =%%20!"
@@ -246,6 +251,7 @@ set /p "update_customer=Enter Customer ID: "
 if "%update_customer%"=="" (
 	echo Customer ID cannot be empty
 	pause
+	cls
 	goto update
 )
 
@@ -267,11 +273,13 @@ rem Validate input (customerName and contactLastName cannot be empty)
 if "%customerName%"=="" (
 	echo Customer Name cannot be empty
 	pause
+	cls
 	goto update
 )
 if "%contactLastName%"=="" (
 	echo Contact Last Name cannot be empty
 	pause
+	cls
 	goto update
 )
 
@@ -289,6 +297,7 @@ set /p "delete_customer=Enter Customer ID: "
 if "%delete_customer%"=="" (
 	echo Customer ID cannot be empty
 	pause
+	cls
 	goto delete
 )
 
