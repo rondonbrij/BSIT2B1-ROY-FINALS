@@ -1,8 +1,11 @@
 @echo off
+setlocal enabledelayedexpansion
 
-start cmd /k title "Customer Management System" & python api_finals.py
+
+start "Customer Management System" cmd /k "python api_finals.py"
 
 :main
+cls
 echo.
 echo   _____         __                       ________  __  _____ 
 echo  / ___/_ _____ / /____  __ _  ___ ____  / ___/ _ \/ / / / _ \
@@ -11,32 +14,32 @@ echo \___/\_,_/___/\__/\___/_/_/_/\__/_/    \___/_/^|_^|\____/____/
 echo.
 
 
-curl http://127.0.0.1:5000
+curl http://127.0.0.1:5000/
 
-set /p choice=Enter your choice (1-4 or e): 
+choice /c 1234e /N
 
-if "%choice%"=="1" (
+if %ERRORLEVEL% == 1 (
 	cls
 	goto add
-) else if "%choice%"=="2" (
+) else if %ERRORLEVEL% == 2 (
 	cls
 	goto retrieve
-) else if "%choice%"=="3" (
+) else if %ERRORLEVEL% == 3 (
 	cls
 	goto update
-) else if "%choice%"=="4" (
+) else if %ERRORLEVEL% == 4 (
 	cls
 	goto delete
-) else if "%choice%"=="e" (
+) else if %ERRORLEVEL% == 5 (
 	cls
 	goto end
-) else (
-	echo Invalid Choice!
-	goto main
 )
 
-:add
+goto end
 
+
+
+:add
 echo =================
 echo ADD NEW CUSTOMER
 echo =================
@@ -54,8 +57,8 @@ set /p "country=Enter Country: "
 set /p "salesRepEmployeeNumber=Enter Sales Rep Employee Number: "
 set /p "creditLimit=Enter Credit Limit: "
 
-rem Validate input (customerName and contactLastName cannot be empty)
 
+rem Validate input (customerName and contactLastName cannot be empty)
 if "%customerName%"=="" (
 	echo Customer Name cannot be empty
 	pause
@@ -72,6 +75,7 @@ pause
 goto main
 
 
+
 :retrieve
 cls
 
@@ -86,26 +90,28 @@ echo [3] Show Customer Orders
 echo [4] Show Customers by City
 echo [5] Back
 
-set /p "retrieve_operation=Enter operation number: "
 
-if "%retrieve_operation%"=="1" (
+choice /c 12345 /N
+
+if %ERRORLEVEL% == 1 (
 	cls
-	goto all
-) else if "%retrieve_operation%"=="2" (
+	goto all_format
+) else if %ERRORLEVEL% == 2 (
 	cls
 	goto search
-) else if "%retrieve_operation%"=="3" (
+) else if %ERRORLEVEL% == 3 (
 	cls
 	goto orders
-) else if "%retrieve_operation%"=="4" (
+) else if %ERRORLEVEL% == 4 (
 	cls
 	goto city
-) else if "%retrieve_operation%"=="5" (
+) else if %ERRORLEVEL% == 5 (
+	cls
 	goto main
 ) else (
-	echo Invalid option, please try again!
-	pause
-	goto retrieve
+    echo ERROR!
+    pause
+    goto retrieve
 )
 
 :all_format
@@ -115,21 +121,17 @@ echo [1] JSON
 echo [2] XML
 echo ==============
 
-set /p "format=Enter format number: "
-if "%format%"=="1" (
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
 	cls
 	curl http://127.0.0.1:5000/customers
 	pause
 	goto retrieve_end
-) else if "%format%"=="2" (
+) else if %ERRORLEVEL% == 2 (
 	cls
 	curl http://127.0.0.1:5000/customers?format=xml
 	pause
 	goto retrieve_end
-) else (
-	echo Invalid option, please try again!
-	pause
-	goto all
 )
 
 :search
@@ -144,64 +146,54 @@ if "%search_customer_id%"=="" (
 	pause
 	goto search
 )
-
-:search_format
 echo ==============
 echo SELECT FORMAT
 echo [1] JSON
 echo [2] XML
 echo ==============
-set /p "format=Enter format number: "
-if "%format%"=="1" (
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
 	cls
 	curl -X GET http://127.0.0.1:5000/customers/%search_customer_id%
 	pause
 	goto retrieve_end
-) else if "%format%"=="2" (
+) else if %ERRORLEVEL% == 2 (
 	cls
 	curl -X GET http://127.0.0.1:5000/customers/%search_customer_id%?format=xml
 	pause
 	goto retrieve_end
-) else (
-	echo Invalid option, please try again!
-	pause
-	goto search_format
 )
 
 :orders
 echo ============================
-echo SHOW CUSTOMERS ID BY ORDERS
+echo SHOW CUSTOMERS ORDERS BY ID
 echo ============================
 echo.
 set /p "search_by_orders=Enter Customer ID: "
+
 
 if "%search_by_orders%"=="" (
 	echo Customer ID cannot be empty
 	pause
 	goto search
 )
-
-:orders_format
 echo ==============
 echo SELECT FORMAT
 echo [1] JSON
 echo [2] XML
 echo ==============
-set /p "format=Enter format number: "
-if "%format%"=="1" (
+
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
 	cls
 	curl -X GET http://127.0.0.1:5000/customers/%search_by_orders%/orders
 	pause
 	goto retrieve_end
-) else if "%format%"=="2" (
+) else if %ERRORLEVEL% == 2 (
 	cls
 	curl -X GET http://127.0.0.1:5000/customers/%search_by_orders%/orders?format=xml
 	pause
 	goto retrieve_end
-) else (
-	echo Invalid option, please try again!
-	pause
-	goto orders_format
 )
 
 :city
@@ -211,6 +203,7 @@ echo =======================
 echo.
 set /p "city=Enter city: "
 
+
 rem Validate input (city cannot be empty)
 if "%city%"=="" (
 	echo City cannot be empty
@@ -218,28 +211,23 @@ if "%city%"=="" (
 	goto retrieve
 )
 
-:city_format
 set "encodedCity=!city: =%%20!"
 echo ==============
 echo SELECT FORMAT
 echo [1] JSON
 echo [2] XML
 echo ==============
-set /p "format=Enter format number: "
-if "%format%"=="1" (
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
 	cls
 	curl -X GET http://127.0.0.1:5000/customers/%encodedCity%
 	pause
 	goto retrieve_end
-) else if "%format%"=="2" (
+) else if %ERRORLEVEL% == 2 (
 	cls
 	curl -X GET http://127.0.0.1:5000/customers/%encodedCity%?format=xml
 	pause
 	goto retrieve_end
-) else (
-	echo Invalid option, please try again!
-	pause
-	goto city_format
 )
 
 :retrieve_end
@@ -292,7 +280,6 @@ curl -X PUT -H "Content-Type: application/json" -d "{ \"customerName\": \"%custo
 pause
 goto main
 
-
 :delete
 echo ================
 echo DELETE CUSTOMER 
@@ -306,10 +293,10 @@ if "%delete_customer%"=="" (
 )
 
 echo Are you sure you want to delete customer %delete_customer%? (Y/N)
-set /p "confirmation="
-if /i "%confirmation%"=="Y" (
+choice /c YN /N
+if %ERRORLEVEL% == 1 (
 	curl -X DELETE http://127.0.0.1:5000/customers/%delete_customer%
-) else (
+) else if %ERRORLEVEL% == 2 (
 	echo Deletion canceled.
 )
 pause
