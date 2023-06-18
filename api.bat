@@ -249,5 +249,74 @@ goto retrieve
 
 
 :update
+echo ================
+echo UPDATE CUSTOMER
+echo ================
+echo.
+set /p "update_customer=Enter Customer ID: "
+
+if "%update_customer%"=="" (
+	echo Customer ID cannot be empty
+	pause
+	goto update
+)
+
+echo.
+set /p "customerName=Enter Company Name: "
+set /p "contactLastName=Enter Customer Last Name: "
+set /p "contactFirstName=Enter Customer First Name: "
+set /p "phone=Enter Phone Number: "
+set /p "addressLine1=Enter Address Line 1: "
+set /p "addressLine2=Enter Address Line 2: "
+set /p "city=Enter City: "
+set /p "state=Enter State: "
+set /p "postalCode=Enter Postal Code: "
+set /p "country=Enter Country: "
+set /p "salesRepEmployeeNumber=Enter Sales Rep Employee Number: "
+set /p "creditLimit=Enter Credit Limit: "
+
+rem Validate input (customerName and contactLastName cannot be empty)
+if "%customerName%"=="" (
+	echo Customer Name cannot be empty
+	pause
+	goto update
+)
+if "%contactLastName%"=="" (
+	echo Contact Last Name cannot be empty
+	pause
+	goto update
+)
+
+curl -X PUT -H "Content-Type: application/json" -d "{ \"customerName\": \"%customerName%\", \"contactLastName\": \"%contactLastName%\", \"contactFirstName\": \"%contactFirstName%\", \"phone\": \"%phone%\", \"addressLine1\": \"%addressLine1%\", \"addressLine2\": \"%addressLine2%\", \"city\": \"%city%\", \"state\": \"%state%\", \"postalCode\": \"%postalCode%\", \"country\": \"%country%\", \"salesRepEmployeeNumber\": %salesRepEmployeeNumber%, \"creditLimit\": %creditLimit% }" http://127.0.0.1:5000/customers/%update_customer%
+
+pause
+goto main
+
+
 :delete
+echo ================
+echo DELETE CUSTOMER 
+echo ================
+echo.
+set /p "delete_customer=Enter Customer ID: "
+if "%delete_customer%"=="" (
+	echo Customer ID cannot be empty
+	pause
+	goto delete
+)
+
+echo Are you sure you want to delete customer %delete_customer%? (Y/N)
+set /p "confirmation="
+if /i "%confirmation%"=="Y" (
+	curl -X DELETE http://127.0.0.1:5000/customers/%delete_customer%
+) else (
+	echo Deletion canceled.
+)
+pause
+goto main
+
+
 :end
+echo Thankyou for using the Customer Management System.
+pause
+exit
