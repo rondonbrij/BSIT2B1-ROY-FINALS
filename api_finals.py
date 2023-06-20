@@ -24,13 +24,18 @@ def generate_xml_response(data_list, root_element="root"):
     root = ET.Element(root_element)
     for data in data_list:
         element = ET.SubElement(root, "customer")
-        for key, value in data.items():
-            sub_element = ET.SubElement(element, key)
-            sub_element.text = str(value)
-
-    xml_string = ET.tostring(root, encoding='utf-8', method='xml')
+        if isinstance(data, dict):
+            for key, value in data.items():
+                sub_element = ET.SubElement(element, key)
+                sub_element.text = str(value)
+        else:
+            sub_element = ET.SubElement(element, "data")
+            sub_element.text = str(data)
+            
+    xml_string = ET.tostring(root, encoding="utf-8", method="xml")
     readable_xml = xml.dom.minidom.parseString(xml_string).toprettyxml(indent="  ")
     return readable_xml
+
 
 # MAIN PAGE
 @app.route("/")

@@ -35,9 +35,6 @@ if %ERRORLEVEL% == 1 (
 	goto end
 )
 
-goto end
-
-
 
 :add
 echo =================
