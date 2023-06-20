@@ -1,4 +1,6 @@
 BSIT2B1-ROY-FINALS
+
+MUST READ BEFORE EXECUTING ANYTHING!!!!!
 EXPLORE THE POWER OF CLASSIC MODELS CRUD API
 
 Take your programming skills to the next level with our Classic Models CRUD API. This powerful tool allows you to seamlessly interact with the Northwind database using Python. Get ready to unleash your potential and create, read, update, and delete data effortlessly!
@@ -17,6 +19,14 @@ After configuring your MySQL Server, open the "api_finals.py" script. Make sure 
 
 Run the API Script:
 Locate the "api.bat" file and run it. This batch file takes care of running the API script for you, eliminating the need to open it separately. In case there are connection issues, you can manually run the "api_finals.py" file.
+
+If you encounter the following error: MySQLdb.IntegrityError: (1364, "Field 'customerNumber' doesn't have a default value"), you can execute the following SQL script to resolve it:
+
+ALTER TABLE payments DROP FOREIGN KEY payments_ibfk_1;
+ALTER TABLE orders DROP FOREIGN KEY orders_ibfk_1;
+ALTER TABLE customers MODIFY COLUMN customerNumber INT AUTO_INCREMENT;
+
+This script will drop the foreign key constraints on the payments and orders tables and modify the customerNumber column in the customers table to have an auto-increment value.
 
 Enjoy and Optimize:
 Start exploring the Classic Models CRUD API and witness the power it brings to your programming endeavors. Once you have finished using the client script, be sure to stop the API script as it may consume some of your computer's memory.
